@@ -9,5 +9,12 @@
     * Purpose - For connecting with MySQL database 
 
 3. go get github.com/gorilla/mux
-    * Purpose - For setting up third-party multiplexer for request routing 
+    * Purpose - For setting up third-party multiplexer for request routing  
+
+## Tagging History 
+
+| Tag         | Description |
+| ----------- | ----------- |
+| v0.1.0      | Get Products functionality       |
+| v0.1.1      | Create Products Functionality        |
 

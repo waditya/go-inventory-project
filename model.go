@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"errors"
 	"fmt"
 )
 
@@ -83,11 +84,16 @@ func (p *product) updateProduct(db *sql.DB) error {
 		return err
 	}
 
-	id, err := result.RowsAffected()
+	RowsAffected, err := result.RowsAffected()
 
 	if err != nil {
 		return err
 	}
-	fmt.Sprintf("%v rows updated", id)
+
+	if RowsAffected == 0 {
+		return errors.New("no such row exists for given id")
+	}
+
+	fmt.Sprintf("%v rows updated", RowsAffected)
 	return nil
 }

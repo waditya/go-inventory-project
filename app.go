@@ -116,7 +116,7 @@ func (app *App) createProductHandler(w http.ResponseWriter, r *http.Request) {
 	err := json.NewDecoder(r.Body).Decode(&p)
 
 	if err != nil {
-		sendError(w, http.StatusBadRequest, "Invalid request id")
+		sendError(w, http.StatusBadRequest, "Invalid request payload")
 		return
 	}
 
@@ -127,7 +127,7 @@ func (app *App) createProductHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	sendResponse(w, http.StatusOK, p)
+	sendResponse(w, http.StatusCreated, p)
 }
 
 func (app *App) updateProductHandler(w http.ResponseWriter, r *http.Request) {
@@ -163,11 +163,35 @@ func (app *App) updateProductHandler(w http.ResponseWriter, r *http.Request) {
 	sendResponse(w, http.StatusOK, p)
 }
 
+func (app *App) deleteProductHandler(w http.ResponseWriter, r *http.Request) {
+
+	vars := mux.Vars(r) // Store the map  of variables in a request determined by the Mux router in vars.
+	key, err := strconv.Atoi(vars["id"])
+
+	if err != nil {
+		sendError(w, http.StatusBadRequest, "invalid product ID")
+		return
+	}
+
+	p := product{ID: key}
+
+	err = p.deleteProduct(app.DB) // Pass the pointer referencing the DB connection pool to the getProduct method
+
+	if err != nil {
+		sendError(w, http.StatusOK, err.Error())
+		return
+	}
+
+	sendResponse(w, http.StatusOK, map[string]string{"result": "successful deletion"})
+	return
+}
+
 func (app *App) handleRoutes() {
 	app.Router.HandleFunc("/products", app.getProductsHandler).Methods("GET")
 	app.Router.HandleFunc("/product/{id}", app.getProductHandler).Methods("GET")
 	app.Router.HandleFunc("/product/", app.createProductHandler).Methods("POST")
 	app.Router.HandleFunc("/product/{id}", app.updateProductHandler).Methods("PUT")
+	app.Router.HandleFunc("/product/{id}", app.deleteProductHandler).Methods("DELETE")
 }
 
 func checkError(e error) {

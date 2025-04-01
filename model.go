@@ -84,16 +84,41 @@ func (p *product) updateProduct(db *sql.DB) error {
 		return err
 	}
 
-	RowsAffected, err := result.RowsAffected()
+	rowsAffected, err := result.RowsAffected()
 
 	if err != nil {
 		return err
 	}
 
-	if RowsAffected == 0 {
+	if rowsAffected == 0 {
 		return errors.New("no such row exists for given id")
 	}
 
-	fmt.Sprintf("%v rows updated", RowsAffected)
+	fmt.Sprintf("%v rows updated", rowsAffected)
 	return nil
+}
+
+// getProduct function will need product information hence we create it as a method of product struct
+
+func (p *product) deleteProduct(db *sql.DB) error {
+
+	query := fmt.Sprintf("DELETE from products WHERE id=%v", p.ID)
+	result, err := db.Exec(query) // Used for select query with single row output
+
+	if err != nil {
+		return err
+	}
+
+	rowsAffected, err := result.RowsAffected()
+
+	if err != nil {
+		return err
+	}
+
+	if rowsAffected == 0 {
+		return errors.New("row does not exist in the database")
+	}
+
+	return nil
+
 }

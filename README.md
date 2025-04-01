@@ -19,4 +19,5 @@
 | v0.1.1      | Create Products Functionality        |
 | v0.1.2      | Update Products Functionality |
 | v0.1.3      | Fix Update Products Functionality |
+| v0.1.4      | Add Delete Products Functionality |
 

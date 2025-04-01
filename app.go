@@ -130,10 +130,44 @@ func (app *App) createProductHandler(w http.ResponseWriter, r *http.Request) {
 	sendResponse(w, http.StatusOK, p)
 }
 
+func (app *App) updateProductHandler(w http.ResponseWriter, r *http.Request) {
+
+	vars := mux.Vars(r) // Store the map  of variables in a request determined by the Mux router in vars.
+	key, err := strconv.Atoi(vars["id"])
+
+	if err != nil {
+		sendError(w, http.StatusBadRequest, "invalid product ID")
+		return
+	}
+
+	var p product
+
+	// Decode the data from request JSON payload
+
+	err = json.NewDecoder(r.Body).Decode(&p)
+
+	if err != nil {
+		sendError(w, http.StatusBadRequest, "Invalid request payload")
+		return
+	}
+
+	p.ID = key
+
+	err = p.updateProduct(app.DB)
+
+	if err != nil {
+		sendError(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	sendResponse(w, http.StatusOK, p)
+}
+
 func (app *App) handleRoutes() {
 	app.Router.HandleFunc("/products", app.getProductsHandler).Methods("GET")
 	app.Router.HandleFunc("/product/{id}", app.getProductHandler).Methods("GET")
 	app.Router.HandleFunc("/product/", app.createProductHandler).Methods("POST")
+	app.Router.HandleFunc("/product/{id}", app.updateProductHandler).Methods("PUT")
 }
 
 func checkError(e error) {

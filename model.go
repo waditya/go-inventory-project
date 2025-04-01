@@ -74,3 +74,20 @@ func (p *product) createProduct(db *sql.DB) error {
 	p.ID = int(id)
 	return nil
 }
+
+func (p *product) updateProduct(db *sql.DB) error {
+	query := fmt.Sprintf("UPDATE products SET name='%v', quantity=%v, price=%v WHERE id=%v", p.Name, p.Quantity, p.Price, p.ID)
+	result, err := db.Exec(query)
+
+	if err != nil {
+		return err
+	}
+
+	id, err := result.RowsAffected()
+
+	if err != nil {
+		return err
+	}
+	fmt.Sprintf("%v rows updated", id)
+	return nil
+}

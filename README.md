@@ -17,5 +17,5 @@
 | ----------- | ----------- |
 | v0.1.0      | Get Products functionality       |
 | v0.1.1      | Create Products Functionality        |
-| v0.1.1      | Update Products Functionality |
+| v0.1.2      | Update Products Functionality |
 
